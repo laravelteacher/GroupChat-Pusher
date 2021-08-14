@@ -11,3 +11,9 @@
 5. again npm install
 
 6. again npm run dev
+
+7. set the database to name chat5
+
+8. php artisan migrate
+
+9.php artisan serve
