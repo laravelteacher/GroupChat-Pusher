@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\chat;
 use App\Models\Message;  
 use App\Models\User;
@@ -62,26 +61,27 @@ class HomeController extends Controller
         $my_id = Auth::id();
         $group = Group::find($id);
         // get all messages that User sent & got
-        $messages = Message::where(function ($query) use ($id, $my_id) {
-            $query->where('group_id', $id)->where('user_id', $my_id);
-        })->oRwhere(function ($query) use ($id, $my_id) {
-            $query->where('group_id', $my_id)->where('user_id', $id);
-        })->get();
+        // $messages = Message::where(function ($query) use ($id, $my_id) {
+        //     $query->where('group_id', $id)->where('user_id', $my_id);
+        // })->oRwhere(function ($query) use ($id, $my_id) {
+        //     $query->where('group_id', $my_id)->where('user_id', $id);
+        // })->get();
+        $messages = message::where(['group_id' => $id])->where(['user_id' => $my_id])->get();
         foreach($messages as $value) {
             message::where(['user_id' => $my_id])->update(['is_read' => 1]); // if User start to see messages is_read in Table update to 0
         }
         return view('messages.index', compact(['group', 'messages']));
     }
     // update is_read .... this function update messages is not read and update to read in Navbar
-    public function getMessage($id)
-    {
-        $my_id = Auth::id();
-        $group = Group::find($id);
-        $messages = message::where(['user_id' => $my_id])->get();
-        foreach($messages as $value) {
-            message::where(['user_id' => $my_id])->update(['is_read' => 1]);
-        }
-    }
+    // public function getMessage($id)
+    // {
+    //     $my_id = Auth::id();
+    //     $group = Group::find($id);
+    //     $messages = message::where(['user_id' => $my_id])->get();
+    //     foreach($messages as $value) {
+    //         message::where(['user_id' => $my_id])->update(['is_read' => 1]);
+    //     }
+    // }
    
    // send new message to all Followers
     public function sendMessage(Request $request)
